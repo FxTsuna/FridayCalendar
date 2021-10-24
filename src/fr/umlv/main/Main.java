@@ -7,9 +7,10 @@ import java.sql.SQLException;
 
 public class Main {
     public static void main(String[] args) throws SQLException, NamingException {
-        var dbUrl = "db";
+        var dbUrl = "db/calendar";
         var ds = new EmbeddedDataSource();
         ds.setDatabaseName(dbUrl);
+        ds.setCreateDatabase("create");
         var conn = ds.getConnection();
         System.out.println(conn.getClientInfo());
     }
