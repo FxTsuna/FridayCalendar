@@ -10,5 +10,7 @@ import java.util.UUID;
 @Repository
 public interface UserRepo extends JpaRepository<CalendarEntity, UUID> {
 
+
     ResponseEntity<UserResponse> saveUser(String username, String password);
+    ResponseEntity<UserResponse> updatePassword(String password);
 }

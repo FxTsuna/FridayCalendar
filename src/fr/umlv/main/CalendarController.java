@@ -5,16 +5,16 @@ import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
+import java.sql.ResultSet;
 import java.util.List;
 import java.util.Objects;
 
-@Controller
+@RestController
 public class CalendarController {
     @Autowired
     private CalendarService calendarService;
@@ -25,17 +25,23 @@ public class CalendarController {
         this.userRepo = userRepo;
     }
 
+    /* Trouver le moyen avec le URI ou sinn test celui la
     @PostMapping("/calendar")
     public ResponseEntity<UserResponse> saveUser(@Validated UserSave input) {
-        Objects.requireNonNull(input);
         var newUser = userRepo.saveUser(input.username(), input.password());
-        return new ResponseEntity<>(new UserResponse(newUser.getBody().id(), newUser.getBody().username()), HttpStatus.OK);
-        //return ResponseEntity.created(new UserResponse(newUser.getBody().id(), newUser.getBody().username()));
+        return new ResponseEntity<>(new UserResponse(newUser.getBody().id(), newUser.getBody().username()), HttpStatus.CREATED);
 
     }
 
-    @GetMapping("/calendar")
-    public List<CalendarEntity> getId() {
-        return userRepo.findAll();
+    @PutMapping("/put")
+    public ResponseEntity<UserResponse> updatePassword(@Validated UserSave input) {
+        var newPwd = userRepo.updatePassword(input.password());
+        return new ResponseEntity<UserSave>()
     }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<UserResponse> deleteUser(@Validated UserSave input) {
+
+    }
+     */
 }
