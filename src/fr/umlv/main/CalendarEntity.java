@@ -11,15 +11,19 @@ public class CalendarEntity {
     @GeneratedValue
     private UUID id;
 
+    @Column(nullable = false)
     private String pwd;
 
-    @ManyToOne
+    @JoinColumn(nullable = false)
+    @ManyToOne(optional = false)
     private CalendarEntity date;
 
-    @ManyToOne
+    @JoinColumn(nullable = false)
+    @ManyToOne(optional = false)
     private CalendarEntity heure;
 
-    @ManyToOne
+    @JoinColumn(nullable = false)
+    @ManyToOne(optional = false)
     private CalendarEntity info;
 
     public CalendarEntity getInfo() {
