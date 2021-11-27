@@ -1,4 +1,4 @@
-package fr.umlv.main.crypt;
+package fr.umlv.main.back.crypt;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -18,6 +18,11 @@ public class CryptPassword {
     private final Cipher cipher;
     private final Cipher decipher;
 
+    private CryptPassword(Cipher cipher, Cipher decipher) {
+        this.cipher = cipher;
+        this.decipher = decipher;
+    }
+
     public CryptPassword() throws InvalidKeyException {
         try {
             Cipher instance = Cipher.getInstance("AES/ECB/PKCS5Padding");
@@ -28,6 +33,18 @@ public class CryptPassword {
         } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
             throw new AssertionError("Algorithm or padding error");
         }
+    }
+
+    public CryptPassword createCrypter() throws InvalidKeyException {
+        try {
+            var cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+            var decipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+            decipher.init(Cipher.DECRYPT_MODE, secretKey);
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+            throw new AssertionError("Algorithm or padding error");
+        }
+        return new CryptPassword(cipher, decipher);
     }
     
     public byte[] cryptedPassword (String password) throws IllegalBlockSizeException {
