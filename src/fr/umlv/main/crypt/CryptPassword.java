@@ -29,7 +29,7 @@ public class CryptPassword {
             throw new AssertionError("Algorithm or padding error");
         }
     }
-
+    
     public byte[] cryptedPassword (String password) throws IllegalBlockSizeException {
         Objects.requireNonNull(password);
         try {
@@ -38,7 +38,6 @@ public class CryptPassword {
             throw new AssertionError("Padding error");
         }
     }
-
 
     public String decryptedPassword (byte[] cryptedpassword) throws IllegalBlockSizeException {
         Objects.requireNonNull(cryptedpassword);

@@ -23,7 +23,7 @@ public class User {
     private byte[] password;
 
     @OneToMany(mappedBy = "user")
-    private ArrayList<Event> user;
+    private ArrayList<Event> events;
 
 
     public User(String username, String password) throws IllegalBlockSizeException, InvalidKeyException {
