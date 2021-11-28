@@ -26,22 +26,18 @@ public class User {
     private ArrayList<Event> events;
 
 
-    public User(String username, String password) throws IllegalBlockSizeException, InvalidKeyException {
+    public User(String username, byte[] password) {
         Objects.requireNonNull(username);
         Objects.requireNonNull(password);
-        CryptPassword cryptPassword = new CryptPassword();
         this.username = username;
-        this.password = cryptPassword.cryptedPassword(password);
+        this.password = password;
     }
 
     public User() {
-
     }
 
-
-    public void setPassword(String password) throws IllegalBlockSizeException, InvalidKeyException {
-        CryptPassword cryptPassword = new CryptPassword();
-        this.password = cryptPassword.cryptedPassword(password);
+    public void setPassword(byte[] password) {
+        this.password = password;
     }
 
     public UUID getId() {

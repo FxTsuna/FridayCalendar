@@ -12,9 +12,9 @@ import java.util.Objects;
 @Component
 @Scope("singleton")
 public class CryptPassword {
-    private final String encryptionKey = "CeSTfUNLeJAVAHa5";
-    private final byte[] encryptionKeyBytes = encryptionKey.getBytes(); // Advanced Encryptiopn standard
-    SecretKey secretKey = new SecretKeySpec(encryptionKeyBytes, "AES");
+    private static final String encryptionKey = "CeSTfUNLeJAVAHa5";
+    private static final byte[] encryptionKeyBytes = encryptionKey.getBytes(); // Advanced Encryptiopn standard
+    private static final SecretKey secretKey = new SecretKeySpec(encryptionKeyBytes, "AES");
     private final Cipher cipher;
     private final Cipher decipher;
 
@@ -35,16 +35,16 @@ public class CryptPassword {
         }
     }
 
-    public CryptPassword createCrypter() throws InvalidKeyException {
+    public static CryptPassword createCrypter() throws InvalidKeyException {
         try {
             var cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
             var decipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
             cipher.init(Cipher.ENCRYPT_MODE, secretKey);
             decipher.init(Cipher.DECRYPT_MODE, secretKey);
+            return new CryptPassword(cipher, decipher);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
             throw new AssertionError("Algorithm or padding error");
         }
-        return new CryptPassword(cipher, decipher);
     }
     
     public byte[] cryptedPassword (String password) throws IllegalBlockSizeException {

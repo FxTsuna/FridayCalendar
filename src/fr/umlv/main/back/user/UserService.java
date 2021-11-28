@@ -4,10 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.IllegalBlockSizeException;
 import java.net.URI;
-import java.security.InvalidKeyException;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -15,7 +14,9 @@ public class UserService {
     @Autowired
     private UserRepo userRepository;
 
-    public ResponseEntity<UserResponseDTO> addUser(String username, String password) throws IllegalBlockSizeException, InvalidKeyException {
+    public ResponseEntity<UserResponseDTO> addUser(String username, byte[] password) {
+        Objects.requireNonNull(username);
+        Objects.requireNonNull(password);
         var user = new User(username, password);
         var createdUser =  userRepository.save(user);
         return ResponseEntity
@@ -23,25 +24,46 @@ public class UserService {
                 .body(new UserResponseDTO(createdUser.getId(), createdUser.getUsername()));
     }
 
-    public ResponseEntity<?> removeUser(UUID id, String password) {
+    public ResponseEntity<UserResponseDTO> removeUser(UUID id, byte[] password) {
+        Objects.requireNonNull(id);
+        Objects.requireNonNull(password);
         var user = userRepository.findById(id);
-        if (user.isEmpty()) return ResponseEntity.notFound().build();
+        if (user.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
         userRepository.delete(user.get());
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<UserResponseDTO> updatePassword(UUID id , String newPassword) throws IllegalBlockSizeException, InvalidKeyException {
-        var user = userRepository.findById(id);
-        if (user.isEmpty()) return ResponseEntity.notFound().build();
-        user.get().setPassword(newPassword);
-        userRepository.save(user.get());
+    public ResponseEntity<UserResponseDTO> updatePassword(UUID id , byte[] newPassword) {
+        Objects.requireNonNull(id);
+        Objects.requireNonNull(newPassword);
+        var userContainer = userRepository.findById(id);
+        if (userContainer.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        var user = userContainer.get();
+        user.setPassword(newPassword);
+        var updatedUser = userRepository.save(user);
         return ResponseEntity
-                .created(URI.create("/users/update/" + user.get().getId()))
-                .body(new UserResponseDTO(user.get().getId(), user.get().getUsername()));
+                .created(URI.create("/users/update/" + updatedUser.getId()))
+                .body(new UserResponseDTO(updatedUser.getId(), updatedUser.getUsername()));
     }
 
+    public ResponseEntity<UserResponseDTO> getUserById(UUID id) {
+        Objects.requireNonNull(id);
+        var userContainer = userRepository.findById(id);
+        if (userContainer.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        var user = userContainer.get();
+        return ResponseEntity.ok(new UserResponseDTO(user.getId(), user.getUsername()));
+    }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
+        var users = userRepository.findAll().stream()
+                .map(user -> new UserResponseDTO(user.getId(), user.getUsername()))
+                .toList();
+        return ResponseEntity.ok(users);
     }
 }
