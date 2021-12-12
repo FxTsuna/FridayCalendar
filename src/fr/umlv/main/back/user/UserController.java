@@ -26,7 +26,7 @@ public class UserController {
     }
 
     @GetMapping("/user/get/{id}")
-    public ResponseEntity<UserResponseDTO> getAll(
+    public ResponseEntity<UserResponseDTO> getUserById(
             @PathVariable UUID id,
             @RequestBody UserCredentialDTO user) {
         Objects.requireNonNull(id);
