@@ -7,9 +7,8 @@ import java.security.InvalidKeyException;
 import java.util.Objects;
 import java.util.UUID;
 
-public record UserCredentialDTO(UUID id, String password) {
-    public UserCredentialDTO {
+public record UserIdDTO(UUID id) {
+    public UserIdDTO {
         Objects.requireNonNull(id);
-        Objects.requireNonNull(password);
     }
 }

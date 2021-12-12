@@ -20,7 +20,7 @@ public class UserController {
     }
 
     @DeleteMapping("/user/delete")
-    public ResponseEntity<UserResponseDTO> removeUser(@RequestBody UserCredentialDTO user) {
+    public ResponseEntity<UserResponseDTO> removeUser(@RequestBody UserIdDTO user) {
         Objects.requireNonNull(user);
         return userService.removeUser(user.id());
     }
@@ -28,14 +28,14 @@ public class UserController {
     @GetMapping("/user/get/{id}")
     public ResponseEntity<UserResponseDTO> getUserById(
             @PathVariable UUID id,
-            @RequestBody UserCredentialDTO user) {
+            @RequestBody UserIdDTO user) {
         Objects.requireNonNull(id);
         Objects.requireNonNull(user);
         return userService.getUserById(id);
     }
 
     @GetMapping("/user/all")
-    public ResponseEntity<List<UserResponseDTO>> getAll(@RequestBody UserCredentialDTO user) {
+    public ResponseEntity<List<UserResponseDTO>> getAll(@RequestBody UserIdDTO user) {
         Objects.requireNonNull(user);
         return userService.getAllUsers();
     }
