@@ -29,6 +29,9 @@ public class Event {
     @Column(nullable = false)
     private String info;
 
+    @Column(nullable = false)
+    private Frequences frequence;
+
 	/**
 	 * Pointor to the corresponding user in the database
 	 */
