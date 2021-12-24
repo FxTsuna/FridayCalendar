@@ -36,7 +36,7 @@ public class UserService {
         var user = new User(username, crypt.hash(password));
         var createdUser =  userRepository.save(user);
         return ResponseEntity
-                .created(URI.create("/users/save/" + createdUser.getId()))
+                .created(URI.create("/user/save/" + createdUser.getId()))
                 .body(new UserResponseDTO(createdUser.getId(), createdUser.getUsername()));
     }
 
@@ -98,6 +98,22 @@ public class UserService {
         }
         var user = userContainer.get();
         return ResponseEntity.ok(new UserResponseDTO(user.getId(), user.getUsername()));
+    }
+
+    public ResponseEntity<UserResponseDTO> getIdByUsername(String username) {
+        Objects.requireNonNull(username);
+        var user = userRepository.findAll().stream().map(e -> {
+            if (e.getUsername().equals(username)) {
+                return e;
+            }
+            return null;
+        }).findAny();
+        if (user.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity
+                .created(URI.create("/user/postId/" + user.get().getId()))
+                .body(new UserResponseDTO(user.get().getId(), user.get().getUsername()));
     }
 
     public ResponseEntity<UserResponseDTO> alreadyRegistered(String username) {

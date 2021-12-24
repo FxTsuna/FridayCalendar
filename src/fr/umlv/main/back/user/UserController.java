@@ -73,6 +73,12 @@ public class UserController {
         return userService.getAllUsers();
     }
 
+	@PostMapping("/user/postId")
+	public ResponseEntity<UserResponseDTO> postId(@RequestBody UserSaveDTO user) {
+		Objects.requireNonNull(user);
+		return userService.getIdByUsername(user.username());
+	}
+
 	@PostMapping("/user/alreadyRegistered")
 	public ResponseEntity<UserResponseDTO> alreadyRegistered(@RequestBody UserSaveDTO user) {
 		Objects.requireNonNull(user);
