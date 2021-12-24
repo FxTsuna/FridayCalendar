@@ -4,6 +4,7 @@ import fr.umlv.main.back.crypt.CryptPassword;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
@@ -99,12 +100,15 @@ public class UserService {
         return ResponseEntity.ok(new UserResponseDTO(user.getId(), user.getUsername()));
     }
 
-    public Boolean alreadyRegistered(String username) {
+    public ResponseEntity<UserResponseDTO> alreadyRegistered(String username) {
         Objects.requireNonNull(username);
         var getAllUser =  userRepository.findAll().stream()
                 .map(User::getUsername)
                 .toList();
-        return getAllUser.contains(username);
+        if (getAllUser.contains(username)) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 
     public ResponseEntity<List<UserResponseDTO>> getAllUsers() {

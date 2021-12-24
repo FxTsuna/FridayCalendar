@@ -74,7 +74,7 @@ public class UserController {
     }
 
 	@PostMapping("/user/alreadyRegistered")
-	public Boolean alreadyRegistered(@RequestBody UserSaveDTO user) {
+	public ResponseEntity<UserResponseDTO> alreadyRegistered(@RequestBody UserSaveDTO user) {
 		Objects.requireNonNull(user);
 		return userService.alreadyRegistered(user.username());
 	}
