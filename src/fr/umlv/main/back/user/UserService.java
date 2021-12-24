@@ -99,6 +99,14 @@ public class UserService {
         return ResponseEntity.ok(new UserResponseDTO(user.getId(), user.getUsername()));
     }
 
+    public Boolean alreadyRegistered(String username) {
+        Objects.requireNonNull(username);
+        var getAllUser =  userRepository.findAll().stream()
+                .map(User::getUsername)
+                .toList();
+        return getAllUser.contains(username);
+    }
+
     public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
         var users = userRepository.findAll().stream()
                 .map(user -> new UserResponseDTO(user.getId(), user.getUsername()))
