@@ -1,6 +1,7 @@
 package fr.umlv.main.back.user;
 
 import fr.umlv.main.back.crypt.CryptPassword;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -98,6 +99,22 @@ public class UserService {
         }
         var user = userContainer.get();
         return ResponseEntity.ok(new UserResponseDTO(user.getId(), user.getUsername()));
+    }
+
+    public ResponseEntity<UserResponseDTO> matchingUser(String username, String password) {
+        Objects.requireNonNull(username);
+        Objects.requireNonNull(password);
+        var crypt = new CryptPassword();
+        var user = userRepository.findAll().stream().map(e -> {
+            if (e.getUsername().equals(username)) {
+                return e;
+            }
+            return null;
+        }).findAny();
+        if (user.isPresent() && crypt.hash(password).equals(user.get().getPassword())) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 
     public ResponseEntity<UserResponseDTO> getIdByUsername(String username) {
