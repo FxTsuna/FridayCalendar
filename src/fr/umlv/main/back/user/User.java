@@ -83,7 +83,7 @@ public class User {
 
 	@Override
 	public String toString() {
-		var messages = new StringJoiner(",\n", "User {\n", "}");
+		var messages = new StringJoiner(",\n", "{\n", "}");
 		messages.add("username=" + username);
 		messages.add("password=" + password);
 		return messages.toString();
