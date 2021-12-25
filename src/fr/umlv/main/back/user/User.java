@@ -5,6 +5,7 @@ import fr.umlv.main.back.event.Event;
 import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
+import java.util.StringJoiner;
 import java.util.UUID;
 
 /**
@@ -78,5 +79,13 @@ public class User {
 	 */
 	public String getPassword() {
 		return password;
+	}
+
+	@Override
+	public String toString() {
+		var messages = new StringJoiner(",\n", "User {\n", "}");
+		messages.add("username=" + username);
+		messages.add("password=" + password);
+		return messages.toString();
 	}
 }
