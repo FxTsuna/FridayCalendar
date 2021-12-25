@@ -70,4 +70,13 @@ public class User {
     public String getUsername() {
         return username;
     }
+
+	/**
+	 * Retrieve the hashed password of the user
+	 *
+	 * @return the hashed password of the user
+	 */
+	public String getPassword() {
+		return password;
+	}
 }
