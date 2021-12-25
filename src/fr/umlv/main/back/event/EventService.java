@@ -67,7 +67,7 @@ public class EventService {
 	 * details
 	 *
 	 * @param id the specified id
-	 * @param eventDetails the specified event details
+	 * @param eventSave the specified event details
 	 *
 	 * @throws NullPointerException if the specified details is null
 	 * @throws EntityNotFoundException if the event with the specified id was not found 

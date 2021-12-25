@@ -15,7 +15,7 @@ public class EventTest {
 
     @Test
     public void shouldThrowNPECreateEventSaveDTOWithNullParameters() {
-        Assertions.assertThrows(NullPointerException.class, () -> new EventSaveDTO(null, null, null, ""));
+        Assertions.assertThrows(NullPointerException.class, () -> new EventSaveDTO(null, null, null, "", null));
     }
 
     @Test

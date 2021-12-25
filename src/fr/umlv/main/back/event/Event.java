@@ -1,5 +1,7 @@
 package fr.umlv.main.back.event;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import fr.umlv.main.DateDetails;
 import fr.umlv.main.back.formatter.EventFormatter;
 import fr.umlv.main.back.user.User;
@@ -30,7 +32,8 @@ public class Event {
     private String info;
 
     @Column(nullable = false)
-    private Frequences frequence;
+    @Embedded
+    private Frequency frequency;
 
 	/**
 	 * Pointor to the corresponding user in the database
@@ -55,11 +58,12 @@ public class Event {
 	 *
 	 * @throws NullPointerException if one of the specified argument is null
 	 */
-    private Event(String title, Date dateStart, Date dateEnd, String info) {
+    private Event(String title, Date dateStart, Date dateEnd, String info, Frequency frequency) {
         this.title = Objects.requireNonNull(title);
         this.dateStart = Objects.requireNonNull(dateStart);
         this.dateEnd = Objects.requireNonNull(dateEnd);
         this.info = Objects.requireNonNull(info);
+        this.frequency = frequency;
     }
 
 	/**
@@ -85,7 +89,7 @@ public class Event {
         Objects.requireNonNull(eventDetails);
         var start = createDateFromDateDetails(eventDetails.dateStart());
         var end = createDateFromDateDetails(eventDetails.dateEnd());
-        return new Event(eventDetails.title(), start, end, eventDetails.info());
+        return new Event(eventDetails.title(), start, end, eventDetails.info(), eventDetails.frequency());
     }
 
 	/**
