@@ -21,7 +21,7 @@ public class EventTest {
     @Test
     public void shouldReturnCorrectEventNoPeriodString() {
         var start = new DateDetails(2000, 0, 1, 0, 0);
-        var event = Event.createEvent(new EventSaveDTO("hello", start, "no info"));
+        var event = Event.createEvent(new EventSaveDTO("hello", start, "no info", null));
         Assertions.assertEquals("hello:20000101T0000:no info", event.toString());
     }
 
@@ -29,7 +29,7 @@ public class EventTest {
     public void shouldReturnCorrectEventWithPeriodString() {
         var start = new DateDetails(2000, 0, 1, 0, 0);
         var end = new DateDetails(2001, 0, 1, 0, 0);
-        var event = Event.createEvent(new EventSaveDTO("hello", start, end, "no info"));
+        var event = Event.createEvent(new EventSaveDTO("hello", start, end, "no info", null));
         Assertions.assertEquals("hello:20000101T0000/20010101T0000:no info", event.toString());
     }
 }
