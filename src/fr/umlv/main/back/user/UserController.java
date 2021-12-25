@@ -79,7 +79,7 @@ public class UserController {
 		return userService.getIdByUsername(user.username());
 	}
 
-	@PostMapping("user/connexion")
+	@PostMapping("/user/connexion")
 	public ResponseEntity<UserResponseDTO> matchingUser(@RequestBody UserSaveDTO user) {
 		Objects.requireNonNull(user);
 		return userService.matchingUser(user.username(), user.password());
