@@ -35,6 +35,11 @@ const routes = [
     name: 'FullCalendar',
     component: () => import('../../src/views/FullCalendar.vue')
   },
+  {
+    path: '/eventModify',
+    name: 'EventModify',
+    component: () => import('../../src/views/EventModifyView.vue')
+  }
 ]
 
 const router = createRouter({
