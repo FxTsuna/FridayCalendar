@@ -56,12 +56,6 @@ import router from "@/router";
 export default {
   name: 'DashBoard',
 
-  data() {
-    return {
-      msg: ''
-    }
-  },
-
   methods: {
 
     calendar() {
@@ -73,29 +67,42 @@ export default {
       const username = JSON.parse(localStorage.getItem('user'));
       fetch("/user/delete/" + username,
           {
-            method:'DELETE',
+            method: 'DELETE',
             headers: {"Content-Type": "application/json"},
           }).then((res => {
             if (res.status === 200) {
               router.push("Connexion")
-            } else {
-              console.log(username)
             }
           })
       )
+    },
+    /*
+    getNextRendezVous() {
+      //const username = JSON.parse(localStorage.getItem('user'));
+      fetch("/user/get/recent", {
+        method:'GET',
+        headers: {"Content-Type": "application/json"},
+      }).then(( res => {
+        console.log(res)
+      }))
+    },
+
+    getDayRendezVous() {
+      fetch("/user/get/day", {
+        method:'GET',
+        headers: {"Content-Type": "application/json"},
+      }).then()
     }
+  },
+
+    beforeMount() {
+      this.getNextRendezVous()
+    }
+
+     */
+
   }
-
-
-  /*
-  mounted() {
-    fetch("/event/all")
-        .then((response) => response.text())
-        .then((data) => {
-          this.msg = data;
-        });
-  }
-
-   */
 }
+
+
 </script>
