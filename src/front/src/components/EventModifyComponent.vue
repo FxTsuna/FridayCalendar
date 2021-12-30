@@ -9,22 +9,24 @@
         <div class="flex flex-col sm:flex-row items-center mb-5 sm:space-x-5">
           <div class="w-full sm:w-1/2">
             <p class="mb-2 font-semibold text-gray-700">Start event</p>
-            <input class="w-full p-5 bg-white border border-gray-200 rounded shadow-sm appearance-none" type="text" placeholder="YYYY/MM/DD" v-model="eventStart" required>
+            <input class="w-full p-5 bg-white border border-gray-200 rounded shadow-sm appearance-none" type="text" placeholder="YYYY/MM/DD hh:mm:ss" v-model="eventStart" required>
           </div>
           <div class="w-full sm:w-1/2 mt-2 sm:mt-0">
             <p class="mb-2 font-semibold text-gray-700">End Event</p>
-            <input class="w-full p-5 bg-white border border-gray-200 rounded shadow-sm appearance-none" type="text" placeholder="YYYY/MM/DD" v-model="eventEnd" required>
+            <input class="w-full p-5 bg-white border border-gray-200 rounded shadow-sm appearance-none" type="text" placeholder="YYYY/MM/DD hh:mm:ss" v-model="eventEnd" required>
           </div>
         </div>
         <p class="mb-2 font-semibold text-gray-700">Event recurrence</p>
         <input class="w-full p-5 bg-white border border-gray-200 rounded shadow-sm appearance-none" type="text" placeholder="Pas encore implémenté">
       </div>
       <div class="flex flex-row items-center justify-between p-5 bg-white border-t border-gray-200 rounded-bl-lg rounded-br-lg">
-        <p class="font-semibold text-gray-600">Cancel</p>
-        <button class="px-4 py-2 text-white font-semibold bg-blue-500 rounded">
+        <p class="font-semibold text-gray-600">
+          <router-link to="FullCalendar">Cancel</router-link>
+        </p>
+        <button class="px-4 py-2 text-white font-semibold bg-blue-500 rounded" @click="deleteEvent">
           Delete
         </button>
-        <button class="px-4 py-2 text-white font-semibold bg-blue-500 rounded">
+        <button class="px-4 py-2 text-white font-semibold bg-blue-500 rounded" @click="updateEvent">
           Save
         </button>
 
@@ -34,6 +36,7 @@
 </template>
 
 <script>
+
 export default {
   name: "EventModifyComponent",
   data: () => ({
@@ -44,7 +47,21 @@ export default {
   }),
 
   methods: {
-
+    deleteEvent() {
+      const event = JSON.parse(localStorage.getItem('event'));
+      fetch("/event/delete/" + event, {
+        method:'DELETE',
+        headers: {"Content-Type": "application/json"},
+      }).then()
+    },
+    updateEvent() {
+      const event = JSON.parse(localStorage.getItem('event'));
+      fetch("/event/update" + event, {
+        method: 'PUT',
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({title: this.title, info: this.info, dateStart: this.eventStart, dateEnd: this.eventEnd})
+      }).then()
+    },
   }
 }
 </script>
