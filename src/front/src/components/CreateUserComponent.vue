@@ -77,9 +77,8 @@ export default {
         )
         if (resp.status === 201 && !this.booleanUsername) {
           await router.push("Connexion")
-        } else  {
-          this.booleanPassword = false
         }
+        this.booleanPassword = false
       } else {
         this.booleanPassword = true
       }
