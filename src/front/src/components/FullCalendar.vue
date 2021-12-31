@@ -35,6 +35,11 @@ export default {
               info: "default info"})
           }).then((res => {
             if (res.status === 201) {
+              console.log(res)
+              /*
+              fetch("event/get/" + )
+
+               */
               const cal = arg.view.calendar
               cal.unselect()
               cal.addEvent({
@@ -50,7 +55,6 @@ export default {
         },
 
         eventClick: (arg) => {
-          console.log(arg)
           const event = JSON.stringify(arg.event.id);
           localStorage.setItem('event', event)
           router.push('EventModify')
