@@ -9,12 +9,12 @@
   <!-- Next rdv -->
     <div class="flex-content max-w-screen-lg bg-purple-500 shadow-2xl rounded-lg mx-auto text-center py-12 mt-4">
       <h2 class="text-3xl leading-9 font-bold tracking-tight text-white sm:text-4xl sm:leading-10">
-        Jsp
+        Prochain rdv + info intelligente
       </h2>
       <div class="mt-8 flex justify-center">
         <div class="inline-flex rounded-md bg-white shadow">
-          <a class="text-gray-700 font-bold py-2 px-6">
-            Prochain rdv + info intelligente
+          <a class="text-gray-700 font-bold py-2 px-6" @click="getNextRendezVous">
+            {{ title }}
           </a>
         </div>
       </div>
@@ -27,7 +27,7 @@
       </h2>
       <div class="mt-8 flex justify-center">
         <div class="inline-flex rounded-md bg-white shadow">
-          <a class="text-gray-700 font-bold py-2 px-6">
+          <a class="text-gray-700 font-bold py-2 px-6" @click="getDayRendezVous">
             Liste de rdv de la journee par ordre chrono
           </a>
         </div>
@@ -56,14 +56,13 @@ import router from "@/router";
 export default {
   name: 'DashBoard',
 
-  methods: {
-/*
-    calendar() {
-      const username = JSON.parse(localStorage.getItem('user'));
-      console.log(username)
-    },
+  data: () => ({
+    title: "",
+    dateStart: "",
+    info:""
+  }),
 
- */
+  methods: {
 
     deleteAccount() {
       const username = JSON.parse(localStorage.getItem('user'));
@@ -71,22 +70,25 @@ export default {
           {
             method: 'DELETE',
             headers: {"Content-Type": "application/json"},
-          }).then((res => {
+          }).then(res => {
             if (res.status === 200) {
               router.push("Connexion")
             }
-          })
+          }
       )
     },
-    /*
+
     getNextRendezVous() {
-      //const username = JSON.parse(localStorage.getItem('user'));
-      fetch("/user/get/recent", {
+      const username = JSON.parse(localStorage.getItem('user'));
+      fetch("/user/get/recent" + username, {
         method:'GET',
         headers: {"Content-Type": "application/json"},
-      }).then(( res => {
-        console.log(res)
-      }))
+      }).then( res => res.json())
+      .then(data => {
+        this.dateStart = data.start
+        this.title = data.title
+        this.info = data.info
+      })
     },
 
     getDayRendezVous() {
@@ -94,18 +96,19 @@ export default {
       fetch("/user/get/day" + username, {
         method:'GET',
         headers: {"Content-Type": "application/json"},
-      }).then()
+      }).then(res => res.json())
+      .then(data => {
+        console.log(data)
+      })
     }
   },
 
     beforeMount() {
       this.getNextRendezVous()
+      this.getDayRendezVous()
     }
-
-     */
-
-  }
 }
+
 
 
 </script>
