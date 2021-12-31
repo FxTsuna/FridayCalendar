@@ -93,6 +93,25 @@ export default {
   }
 
  */
+  methods: {
+    notRegisteredYet() {
+      const username = JSON.parse(localStorage.getItem('user'));
+      fetch("/user/exist",
+          {
+            method: 'POST',
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({username: username, password: this.password})
+          }).then(function (res) {
+        if (res.status !== 200) {
+          router.push("Connexion")
+        }
+      })
+    }
+  },
+
+  beforeMount() {
+    this.notRegisteredYet()
+  }
 }
 </script>
 

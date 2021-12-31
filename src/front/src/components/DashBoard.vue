@@ -108,13 +108,30 @@ export default {
       .then(data => {
         console.log(data)
       })
+    },
+
+    notRegisteredYet() {
+      const username = JSON.parse(localStorage.getItem('user'));
+      fetch("/user/exist",
+          {
+            method: 'POST',
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({username: username, password: this.password})
+          }).then(function (res) {
+        if (res.status !== 200) {
+          router.push("Connexion")
+        }
+      })
     }
   },
 
-    beforeMount() {
-      this.getNextRendezVous()
-      this.getDayRendezVous()
-    }
+
+
+  beforeMount() {
+    this.notRegisteredYet()
+    this.getNextRendezVous()
+    this.getDayRendezVous()
+  }
 }
 
 
