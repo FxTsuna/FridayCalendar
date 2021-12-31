@@ -14,6 +14,13 @@
       </button>
       </div>
     </div>
+    <div class="flex place-items-center">
+      <div class="text-center ml-auto mr-20 my-1">
+        <button class="p-3 pl-5 pr-5 bg-indigo-500 hover:bg-blue-400 text-gray-100 text-lg rounded-lg focus:border-4 border-indigo-300" @click="logOut">
+          Log out
+        </button>
+      </div>
+    </div>
   <!-- Next rdv -->
     <div class="flex-content max-w-screen-lg bg-purple-500 shadow-2xl rounded-lg mx-auto text-center py-12 mt-4">
       <h2 class="text-3xl leading-9 font-bold tracking-tight text-white sm:text-4xl sm:leading-10">
@@ -112,22 +119,19 @@ export default {
 
     notRegisteredYet() {
       const username = JSON.parse(localStorage.getItem('user'));
-      fetch("/user/exist",
-          {
-            method: 'POST',
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({username: username, password: this.password})
-          }).then(function (res) {
-        if (res.status !== 200) {
-          router.push("Connexion")
-        }
-      })
+      if (username === null) {
+        router.push("Connexion")
+      }
+    },
+    logOut() {
+      localStorage.setItem('user', null)
+      router.push("/")
     }
   },
 
 
 
-  beforeMount() {
+  mounted() {
     this.notRegisteredYet()
     this.getNextRendezVous()
     this.getDayRendezVous()

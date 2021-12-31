@@ -52,7 +52,7 @@ export default {
     },
     getUsername() {
       const username = JSON.stringify(this.username);
-      localStorage.setItem('user', username);
+      localStorage.setItem('user', username)
     }
   }
 }
