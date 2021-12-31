@@ -64,8 +64,7 @@ public class UserService {
 	/**
 	 * Update the password of a user with the specified username
 	 *
-	 * @param username the specified username
-	 * @param newPassword the new password
+	 * @param details the specified username and the new password
 	 *
 	 * @throws NullPointerException if the specified details is null
 	 *
@@ -73,13 +72,13 @@ public class UserService {
      *         404 (not found) http response otherwise
 	 */
     @Async
-    public CompletableFuture<ResponseEntity<UserResponseDTO>> updatePassword(String username , String newPassword) {
+    public CompletableFuture<ResponseEntity<UserResponseDTO>> updatePassword(UserSaveDTO details) {
         var crypt = new CryptPassword();
-        var user = userRepository.findById(username);
+        var user = userRepository.findById(details.username());
         if (user.isEmpty()) {
             return CompletableFuture.completedFuture(ResponseEntity.notFound().build());
         }
-        user.get().setPassword(crypt.hash(newPassword));
+        user.get().setPassword(crypt.hash(details.password()));
         var updatedUser = userRepository.save(user.get());
         return CompletableFuture.completedFuture(ResponseEntity
                 .created(URI.create("/user/update/" + updatedUser.getUsername()))

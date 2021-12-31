@@ -6,7 +6,7 @@
           New Password
         </label>
         <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="password" type="password" placeholder="Password" v-model="password">
-        <p class="text-gray-600 text-xs italic">Must use utf-8 character</p>
+        <p class="text-gray-600 text-xs italic">Can't use special character or not utf-8 character</p>
       </div>
     </div>
     <div class="mb-9">
@@ -43,15 +43,14 @@ export default {
     update() {
       if (this.password === this.confirm) {
         const username = JSON.parse(localStorage.getItem('user'));
-          fetch("/user/update/" + username,
+          fetch("/user/update",
             {
               method: 'PUT',
               headers: {"Content-Type": "application/json"},
-              body: JSON.stringify({password: this.password})
+              body: JSON.stringify({username: username, password: this.password})
             }).then(resp => {
               console.log(resp.json)
             if (resp.status === 201) {
-              console.log(resp.status)
               router.push("DashBoard")
             }
           })

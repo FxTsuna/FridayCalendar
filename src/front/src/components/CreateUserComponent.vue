@@ -15,7 +15,7 @@
           Password
         </label>
         <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="password" type="password" placeholder="Password" v-model="password">
-        <p class="text-gray-600 text-xs italic">Must use utf-8 character</p>
+        <p class="text-gray-600 text-xs italic">Can't use special character or not utf-8 character</p>
       </div>
     </div>
       <div class="mb-9">
