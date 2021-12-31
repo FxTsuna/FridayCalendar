@@ -24,17 +24,11 @@ export default {
         editable: true,
         selectable: true,
         select: (arg) => {
-          const username = JSON.parse(localStorage.getItem("user"))
-          console.log(username)
-
-          console.log(formatDate(arg.start, {year: "numeric", month: "2-digit", day: "2-digit", timeZoneName:"short", hour:"2-digit", minute:"2-digit", second:"2-digit", meridiem: false}) + ' to ' +
-          formatDate(arg.end, {year: "numeric", month: "2-digit", day: "2-digit", timeZoneName:"short", hour:"2-digit", minute:"2-digit", second:"2-digit", meridiem: false}))
-
           fetch("/event/save", {
             method: 'POST',
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({
-              user:  username,
+              user:  JSON.parse(localStorage.getItem("user")),
               title: "default event name",
               start: formatDate(arg.start, {year: "numeric", month: "2-digit", day: "2-digit", timeZoneName:"short", hour:"2-digit", minute:"2-digit", second:"2-digit", meridiem: false}),
               end: formatDate(arg.end, {year: "numeric", month: "2-digit", day: "2-digit", timeZoneName:"short", hour:"2-digit", minute:"2-digit", second:"2-digit", meridiem: false}),
@@ -55,7 +49,7 @@ export default {
         },
 
         eventClick: (arg) => {
-          const eventIdOnClick = JSON.stringify(arg.event.id)
+          const eventIdOnClick = JSON.stringify(arg.event)
           localStorage.setItem('eventIdOnClick', eventIdOnClick)
           router.push('EventModify')
         },
