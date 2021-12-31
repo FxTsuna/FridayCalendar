@@ -12,96 +12,93 @@ import interactionPlugin from '@fullcalendar/interaction'
 import router from "@/router";
 import { formatDate } from '@fullcalendar/core'
 
+
 export default {
   components: {
-    FullCalendar // make the <FullCalendar> tag available
+    FullCalendar
   },
 
   data: () => ({
-      calendarOptions: {
-        plugins: [ dayGridPlugin, interactionPlugin ],
-        initialView: 'dayGridMonth',
-        editable: true,
-        selectable: true,
-        select: (arg) => {
-          fetch("/event/save", {
-            method: 'POST',
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({
-              user:  JSON.parse(localStorage.getItem("user")),
-              title: "default event name",
-              start: formatDate(arg.start, {year: "numeric", month: "2-digit", day: "2-digit", timeZoneName:"short", hour:"2-digit", minute:"2-digit", second:"2-digit", meridiem: false}),
-              end: formatDate(arg.end, {year: "numeric", month: "2-digit", day: "2-digit", timeZoneName:"short", hour:"2-digit", minute:"2-digit", second:"2-digit", meridiem: false}),
-              info: "default info"
+    lst: [],
+    calendarOptions: {
+      plugins: [dayGridPlugin, interactionPlugin],
+      initialView: 'dayGridMonth',
+      editable: false,
+      selectable: true,
+      select: (arg) => {
+        fetch("/event/save", {
+          method: 'POST',
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({
+            user: JSON.parse(localStorage.getItem("user")),
+            title: "default event name",
+            start: formatDate(arg.start, {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+              timeZoneName: "short",
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+              meridiem: false
+            }),
+            end: formatDate(arg.end, {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+              timeZoneName: "short",
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+              meridiem: false
+            }),
+            info: "default info"
+          })
+        }).then(res => res.json())
+            .then(data => {
+              const cal = arg.view.calendar
+              cal.unselect()
+              cal.addEvent({
+                id: data.id,
+                title: "New event, click to modify",
+                start: arg.start,
+                end: arg.end,
+                allDay: true
+              })
             })
-          }).then(res => res.json())
-              .then(data => {
-                const cal = arg.view.calendar
-                cal.unselect()
-                cal.addEvent({
-                  id: data.id,
-                  title:"New event, click to modify",
-                  start: arg.start,
-                  end: arg.end,
-                  allDay: true
-                })
-          })
-        },
+      },
 
-        eventClick: (arg) => {
-          const eventIdOnClick = JSON.stringify(arg.event)
-          localStorage.setItem('eventIdOnClick', eventIdOnClick)
-          router.push('EventModify')
-        },
+      eventClick: (arg) => {
+        const eventIdOnClick = JSON.stringify(arg.event)
+        localStorage.setItem('eventIdOnClick', eventIdOnClick)
+        router.push('EventModify')
+      },
 
-        events: [
-          fetch("/event/get/" + JSON.parse(localStorage.getItem('user')), {
-            method:'GET',
-            headers: {"Content-Type": "application/json"},
-          }).then(res => {
-            if (res.status === 200) {
-              console.log("test 1"+ res.json())
-              console.log("test 2"+ res)
-            }
-          })
-        ]},
-
-  }),
-/*
-  methods:{
-    onPage() {
-      const eventId = JSON.parse(localStorage.getItem('eventIdOnSave'))
-      fetch("/event/get/" + eventId, {
+      events: fetch("/event/all/" + JSON.parse(localStorage.getItem('user')), {
         method:'GET',
         headers: {"Content-Type": "application/json"},
-      }).then(res => {
-        if (res.status === 200) {
-          console.log("test 1"+ res.json())
-          console.log("test 2"+ res)
-        }
-      })
+      }).then( res =>  res.json())
+          .then(data => {
+            let lst = []
+            for (let i = 0; i < data.length; i++) {
+              lst.push(JSON.parse(JSON.stringify(data[i])))
+            }
+            return lst
+          })
     }
-  },
+  }),
 
-  beforeMount() {
-    this.onPage()
-  }
+    methods: {
+      notRegisteredYet() {
+        const username = JSON.parse(localStorage.getItem('user'));
+        if (username === null) {
+          router.push("Connexion")
+        }
+      },
 
- */
-  methods: {
-    notRegisteredYet() {
-      const username = JSON.parse(localStorage.getItem('user'));
-      if (username === null) {
-        router.push("Connexion")
+      beforeMount() {
+        this.notRegisteredYet()
       }
     }
-  },
-
-  beforeMount() {
-    this.notRegisteredYet()
   }
-}
 </script>
-
-<style scoped>
-</style>
