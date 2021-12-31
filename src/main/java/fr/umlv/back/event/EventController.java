@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -27,24 +28,9 @@ public class EventController {
 	 * 		   201 (created) http response otherwise
 	 */
     @PostMapping("/event/save")
-    public ResponseEntity<EventResponseDTO> addEvent(@RequestBody EventSaveDTO event) {
+    public ResponseEntity<EventResponseDTO> addEvent(@RequestBody EventSaveDTO event) throws ParseException {
         Objects.requireNonNull(event);
         return eventService.addEvent(event);
-    }
-
-	/**
-	 * Remove an event from the database according the specified event info
-	 *
-	 * @param event the specified event info
-	 * 
-	 * @throws NullPointerException if the specified event info is null
-	 * @return 200 (ok) http response if the corresponding event was deleted
-	 * 		   404 (not found) http response otherwise
-	 */
-    @DeleteMapping("/event/delete")
-    public ResponseEntity<EventResponseDTO> removeEvent(@RequestBody EventCredentialDTO event) {
-        Objects.requireNonNull(event);
-        return eventService.removeEvent(event.id());
     }
 
 	/**
@@ -86,7 +72,7 @@ public class EventController {
     @PutMapping("/event/update/{id}")
     public ResponseEntity<EventResponseDTO> updateEvent(
             @PathVariable UUID id,
-            @RequestBody EventSaveDTO event) {
+            @RequestBody EventSaveDTO event) throws ParseException {
         Objects.requireNonNull(event);
         Objects.requireNonNull(id);
         return eventService.updateEvent(id, event);
