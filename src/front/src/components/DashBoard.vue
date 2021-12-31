@@ -57,11 +57,13 @@ export default {
   name: 'DashBoard',
 
   methods: {
-
+/*
     calendar() {
       const username = JSON.parse(localStorage.getItem('user'));
       console.log(username)
     },
+
+ */
 
     deleteAccount() {
       const username = JSON.parse(localStorage.getItem('user'));
