@@ -1,0 +1,168 @@
+---
+title: "Projet de JAVA: Friday"
+subtitle: "M1 Informatique"
+author: "Mathieu Chan"
+date: "2021-12-31"
+geometry: margin=2cm
+header-includes: |
+	\usepackage{titling}
+	\usepackage{fancyhdr}
+	\usepackage{graphicx}
+
+	\pagestyle{fancy}
+	\fancyhead[LO,LE]{compte rendu de java}
+	\fancyfoot[L]{\thedate}
+footer-left: "2021-2022"
+output:
+    pdf_document:
+        number_sections: true
+		font-size: 10
+---
+
+\pagebreak
+
+\tableofcontents
+
+\pagebreak
+
+# Introduction
+
+**Friday** est un calendrier classique qui est capable de synchroniser avec le
+calendrier Google, ajouter/modifier/supprimer des events, créer un compte
+utilisateur...
+
+Cet application est en cours développement et n'est pas totalement implémenter
+et prêt pour la production.
+
+Un README en anglais est mis à disposition des utilisateurs au moment de la mis
+en production de l'application.
+
+# Le calendrier Friday
+
+## Construction et lancement de l'application
+
+Pour commencer, il faut construire l'application pour obtenir un exécutable.
+
+```
+./mwnw clean install
+```
+
+Ce script va permettre installer les commandes nécessaires pour la construction
+de l'application, c'est-à-dire:
+
+* maven
+* node & npm
+
+Ces commandes vont permettre d'installer toutes les dépendences, que ce soit au
+niveau du backend et frontend.
+
+```
+java -jar target/FridayCalendar.jar
+```
+
+Cette commande va permettre de lancer l'application produite par la commande
+précédente.
+L'application réserve le port 8080, ainsi pour accéder à la page produite par
+l'application il faut copier l'url `localhost:8080` dans un navigateur.
+
+## Les fonctionnalités disponibles
+
+Ce calendrier possède les fonctionnalités suivantes:
+
+* Création d'un compte utilisateur
+* Afficher un événement sur le calendrier
+
+## Important
+
+Friday est en cours de développement et n'est pas totalement implémenter, nous
+sommes en train travailler sur les fonctionnalités suivantes:
+
+* Synchronization du calendrier avec les évènements présents sur Google Calendar
+* Ajouter/Modifier/Suppimer un évènement
+* Calculer le temps requis d'un point A vers le lieu d'un évènement
+* Éviter aux utilisateurs d'accéder aux évènements des autres utilisateurs
+* Pouvoir importer un fichier calendar dans le calendrier
+* Mettre en place des évènements récurrents
+
+# La structure du calendrier
+
+Les dossiers principals se situent dans le dossier *src*:
+
+* front : contient le code pour créer l'interface web
+* back : contient le code pour la mise en place de la base de données et de la
+  gestion des requêtes
+* test : contient l'ensemble des tests sur le backend 
+
+\begin{figure}[h]
+	\centering
+	\caption{Arbre dans le dossier src}\label{fig:1}
+	\includegraphics[width=5cm]{img/tree.png}
+\end{figure}
+
+\pagebreak
+
+## Les évènements
+
+La structure des fichiers pour les utilisateurs et les évènements sont
+similaires, donc nous prendrons les évènements comme example.
+
+\begin{figure}[h]
+	\centering
+	\caption{Arbre dans le dossier event}\label{fig:1}
+	\includegraphics[width=5cm]{img/tree1.png}
+\end{figure}
+
+**Event** permet traduire un évènement en un objet et créer une table évènement
+dans la BDD
+
+La classe **EventService** permet de fournir des méthodes pour gérer la
+récupération des informations ou l'envoie des informations depuis la BDD.
+
+**EventController** permet de gérer l'envoie ou la réception des requêtes http.
+
+# Difficultés rencontrées
+
+La particularité de ce projet est que la plupart des technologies utilisées ne
+sont pas des outils que nous avons déjà.
+En effet, le but du projet est de nous permettre de découvrir chacune des
+technologies par nous même et donc d'attentivement analyser les documentations
+correspondantes.
+
+Le mode de travail a aussi été difficile à mettre en place, l'utilisation des
+*merge request* pour soumettre notre travail à notre bînome.
+Cela requiert de savoir les tâches à effectuer et comment les répartir dans
+l'équipe selon les préférences, les points faibles et forts de chacun, mais
+aussi des ordres de priorités de chaque tâche et fonctionnalités à mettre en
+place.
+
+# Ce projet a été bénéfique
+
+**Friday** nous a permit de découvrir de nouvelles technologies, que ce soit de
+nom ou en pratique.
+Il fallait qu'on apprenne à savoir où est l'information, vérifier la véracité de
+ces informations (notamment lorsque ça vient d'un forum par exemple)
+
+On a aussi pu découvrir comment s'organiser avec l'utilisation l'outil de 
+versionnage **gitlab**.
+Nous avons pu améliorer notre analyse du code grâce au revue de code et les
+merge request. Avec cette méthode de travail et d'organisation, on a du faire
+plus attention aux détails du code et comprendre rapidement ce que fait le code.
+
+# Bugs observées
+
+* Lorsque l'uitlisateur change de fuseau horaire, le application ne se lancera
+  par correctement et risque de renvoyer des erreurs lors du formatage de la
+  date
+* Les évènements ne sont pas lié à leur utilisateur respectif lors de l'ajout de
+  ces évènements dans la base de données (il faudrait mettre en place des
+  session au niveau de la partie backend)
+
+# Les Tests
+
+Les tests mis en place testent seulement l'utilité principal de chaque méthode.
+Nous n'avons pas mis en place de tests qui vont tester les méthodes de façon
+extrême. C'est-à-dire si des valeurs innatendues sont entrées ou encore si
+l'application se situe dans un état incohérent.
+
+Le but des tests est de principalement tester les intéractions entre les
+services mis en place et la base de données.
