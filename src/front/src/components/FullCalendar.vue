@@ -9,6 +9,7 @@ import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import router from "@/router";
+import { formatDate } from '@fullcalendar/core'
 //import EventModal from './ModalComponent'
 
 export default {
@@ -23,35 +24,34 @@ export default {
         selectable: true,
         select: (arg) => {
 
-          console.log(arg.start + ' to ' + arg.end)
-/*
+          console.log(formatDate(arg.start, {year: "numeric", month: "2-digit", day: "2-digit", timeZoneName:"short", hour:"2-digit", minute:"2-digit", second:"2-digit", meridiem: false}))
+
           fetch("/event/save", {
             method: 'POST',
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({title: "default event name", dateStart: arg.start, dateEnd: arg.end, info: "default info"})
+            body: JSON.stringify({title: "default event name",
+              start: formatDate(arg.start, {year: "numeric", month: "2-digit", day: "2-digit", timeZoneName:"short", hour:"2-digit", minute:"2-digit", second:"2-digit", meridiem: false}),
+              end: formatDate(arg.end, {year: "numeric", month: "2-digit", day: "2-digit", timeZoneName:"short", hour:"2-digit", minute:"2-digit", second:"2-digit", meridiem: false}),
+              info: "default info"})
           }).then((res => {
             if (res.status === 201) {
-              fetch("event/get l'id somehow et le mettre dans event")
+              const cal = arg.view.calendar
+              cal.unselect()
+              cal.addEvent({
+                id: "",
+                title:"New event, click to modify",
+                start: arg.start,
+                end: arg.end,
+                allDay: true
+              })
+              //fetch("event/get l'id somehow et le mettre dans event")
             }
           }))
-
-
- */
-          const cal = arg.view.calendar
-          cal.unselect()
-          cal.addEvent({
-            id: "",
-            title:"ui",
-            start: arg.start,
-            end: arg.end,
-            allDay: true
-          })
-
         },
 
         eventClick: (arg) => {
           console.log(arg)
-          const event = JSON.stringify(arg.event);
+          const event = JSON.stringify(arg.event.id);
           localStorage.setItem('event', event)
           router.push('EventModify')
         },

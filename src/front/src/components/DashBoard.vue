@@ -88,7 +88,8 @@ export default {
     },
 
     getDayRendezVous() {
-      fetch("/user/get/day", {
+      const username = JSON.parse(localStorage.getItem('user'));
+      fetch("/user/get/day" + username, {
         method:'GET',
         headers: {"Content-Type": "application/json"},
       }).then()
