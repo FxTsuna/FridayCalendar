@@ -77,4 +77,22 @@ public class UserController {
 		Objects.requireNonNull(credentials);
 		return userService.correctCredentials(credentials).get();
 	}
+
+	/**
+	 * Update the password of a user with the specified username
+	 *
+	 * @param id the specified id
+	 * @param newPassword the new password
+	 *
+	 * @throws NullPointerException if the specified details is null
+	 *
+	 * @return 201 (created) http response if the password of the user has been changed,
+	 *         404 (not found) http response otherwise
+	 */
+	@PutMapping("/user/update/{id}")
+	public ResponseEntity<UserResponseDTO> updatePassword(@PathVariable String id, @RequestBody String newPassword) throws ExecutionException, InterruptedException {
+		Objects.requireNonNull(id);
+		Objects.requireNonNull(newPassword);
+		return userService.updatePassword(id, newPassword).get();
+	}
 }
