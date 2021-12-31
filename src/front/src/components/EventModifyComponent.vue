@@ -37,6 +37,8 @@
 
 <script>
 
+import router from "@/router";
+
 export default {
   name: "EventModifyComponent",
   data: () => ({
@@ -48,19 +50,28 @@ export default {
 
   methods: {
     deleteEvent() {
-      const event = JSON.parse(localStorage.getItem('event'));
+      const event = JSON.parse(localStorage.getItem('eventIdOnClick'));
       fetch("/event/delete/" + event, {
         method:'DELETE',
         headers: {"Content-Type": "application/json"},
-      }).then()
+      }).then(res => {
+        if (res.status === 200) {
+          router.push("FullCalendar")
+        }
+      })
     },
+
     updateEvent() {
-      const event = JSON.parse(localStorage.getItem('event'));
+      const event = JSON.parse(localStorage.getItem('eventIdOnClick'));
       fetch("/event/update" + event, {
         method: 'PUT',
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({title: this.title, info: this.info, dateStart: this.eventStart, dateEnd: this.eventEnd})
-      }).then()
+      }).then(res => {
+        if (res.status === 202) {
+          router.push("FullCalendar")
+        }
+      })
     },
   }
 }
