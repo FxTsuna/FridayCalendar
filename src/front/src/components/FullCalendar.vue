@@ -1,4 +1,7 @@
 <template>
+  <a class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:shadow-outline">
+    <router-link to="/dashboard">Back to Dashboard</router-link>
+  </a>
   <FullCalendar :options="calendarOptions"/>
 </template>
 
