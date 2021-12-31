@@ -3,7 +3,7 @@
     <div class="flex flex-col w-11/12 sm:w-5/6 lg:w-1/2 max-w-2xl mx-auto border border-gray-300 shadow-xl">
       <div class="flex flex-col px-6 py-5 bg-gray-50">
         <p class="mb-2 font-semibold text-gray-700">Event Title</p>
-        <input class="w-full mb-5 p-5 bg-white border border-gray-200 rounded shadow-sm appearance-none" type="text" placeholder="Title event" v-model="title">
+        <input class="w-full mb-5 p-5 bg-white border border-gray-200 rounded shadow-sm appearance-none" id="title" type="text" v-model="title">
         <p class="mb-2 font-semibold text-gray-700">Event info</p>
         <textarea type="text" v-model="info" placeholder="Type message..." class="p-5 mb-5 bg-white border border-gray-200 rounded shadow-sm h-36" id=""></textarea>
         <div class="flex flex-col sm:flex-row items-center mb-5 sm:space-x-5">
@@ -36,6 +36,13 @@
 </template>
 
 <script>
+/*
+const event = JSON.parse(localStorage.getItem('eventIdOnClick'));
+const myTitle = event.title;
+document.getElementById("title").setAttribute("Title event", myTitle);
+
+ */
+
 
 import router from "@/router";
 
@@ -56,20 +63,20 @@ export default {
         headers: {"Content-Type": "application/json"},
       }).then(res => {
         if (res.status === 200) {
-          router.push("FullCalendar")
+          router.push("FullCalendar");
         }
       })
     },
 
     updateEvent() {
       const event = JSON.parse(localStorage.getItem('eventIdOnClick'));
-      fetch("/event/update" + event, {
+      fetch("/event/update/" + event, {
         method: 'PUT',
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({title: this.title, info: this.info, dateStart: this.eventStart, dateEnd: this.eventEnd})
       }).then(res => {
         if (res.status === 202) {
-          router.push("FullCalendar")
+          router.push("FullCalendar");
         }
       })
     },

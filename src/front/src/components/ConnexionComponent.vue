@@ -45,14 +45,14 @@ export default {
             body: JSON.stringify({username: this.username, password: this.password})
           }).then(function (res) {
           if (res.status === 200) {
-            router.push("/dashboard")
+            router.push("/dashboard");
           }
       })
       this.wrongUser = true
     },
     getUsername() {
       const username = JSON.stringify(this.username);
-      localStorage.setItem('user', username)
+      localStorage.setItem('user', username);
     }
   }
 }

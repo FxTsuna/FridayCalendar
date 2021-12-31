@@ -4,7 +4,15 @@
       <!-- buttons -->
       <div class="text-center ml-auto mr-20">
         <button class="p-3 pl-5 pr-5 bg-indigo-500 hover:bg-blue-400 text-gray-100 text-lg rounded-lg focus:border-4 border-indigo-300" @click="deleteAccount">Delete account</button>
-       </div>
+      </div>
+
+    </div>
+    <div class="flex place-items-center">
+      <div class="text-center ml-auto mr-20 my-1">
+      <button class="p-3 pl-5 pr-5 bg-indigo-500 hover:bg-blue-400 text-gray-100 text-lg rounded-lg focus:border-4 border-indigo-300">
+        <router-link to="/updatePassword">Change password</router-link>
+      </button>
+      </div>
     </div>
   <!-- Next rdv -->
     <div class="flex-content max-w-screen-lg bg-purple-500 shadow-2xl rounded-lg mx-auto text-center py-12 mt-4">
@@ -80,7 +88,7 @@ export default {
 
     getNextRendezVous() {
       const username = JSON.parse(localStorage.getItem('user'));
-      fetch("/user/get/recent" + username, {
+      fetch("/user/get/recent/" + username, {
         method:'GET',
         headers: {"Content-Type": "application/json"},
       }).then( res => res.json())
@@ -93,7 +101,7 @@ export default {
 
     getDayRendezVous() {
       const username = JSON.parse(localStorage.getItem('user'));
-      fetch("/user/get/day" + username, {
+      fetch("/user/get/day/" + username, {
         method:'GET',
         headers: {"Content-Type": "application/json"},
       }).then(res => res.json())
