@@ -8,12 +8,12 @@
         <textarea type="text" v-model="info" placeholder="Type message..." class="p-5 mb-5 bg-white border border-gray-200 rounded shadow-sm h-36"></textarea>
         <div class="flex flex-col sm:flex-row items-center mb-5 sm:space-x-5">
           <div class="w-full sm:w-1/2">
-            <p class="mb-2 font-semibold text-gray-700">Start event</p>
-            <input class="w-full p-5 bg-white border border-gray-200 rounded shadow-sm appearance-none" type="text" placeholder="YYYY/MM/DD hh:mm:ss" v-model="eventStart" required>
+            <p class="mb-2 font-semibold text-gray-700">Start event (MM/DD/YYYY, hh:mm:ss GMT+1)</p>
+            <input class="w-full p-5 bg-white border border-gray-200 rounded shadow-sm appearance-none" type="text" v-model="eventStart" required>
           </div>
           <div class="w-full sm:w-1/2 mt-2 sm:mt-0">
-            <p class="mb-2 font-semibold text-gray-700">End Event</p>
-            <input class="w-full p-5 bg-white border border-gray-200 rounded shadow-sm appearance-none" type="text" placeholder="YYYY/MM/DD hh:mm:ss" v-model="eventEnd" required>
+            <p class="mb-2 font-semibold text-gray-700">End Event (MM/DD/YYYY, hh:mm:ss GMT+1)</p>
+            <input class="w-full p-5 bg-white border border-gray-200 rounded shadow-sm appearance-none" type="text" v-model="eventEnd" required>
           </div>
         </div>
         <p class="mb-2 font-semibold text-gray-700">Event recurrence</p>
@@ -89,7 +89,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-</style>

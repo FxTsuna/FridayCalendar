@@ -24,12 +24,18 @@
   <!-- Next rdv -->
     <div class="flex-content max-w-screen-lg bg-purple-500 shadow-2xl rounded-lg mx-auto text-center py-12 mt-4">
       <h2 class="text-3xl leading-9 font-bold tracking-tight text-white sm:text-4xl sm:leading-10">
-        Prochain rdv + info intelligente
+        Next rendez-vous
       </h2>
       <div class="mt-8 flex justify-center">
         <div class="inline-flex rounded-md bg-white shadow">
-          <a class="text-gray-700 font-bold py-2 px-6" @click="getNextRendezVous">
-            {{ title }}
+          <a class="text-gray-700 font-bold py-2 px-6">
+           Title : {{title}}
+          </a>
+          <a class="text-gray-700 font-bold py-2 px-6">
+            Start event : {{dateStart}}
+          </a>
+          <a class="text-gray-700 font-bold py-2 px-6">
+            Info : {{info}}
           </a>
         </div>
       </div>
@@ -38,12 +44,12 @@
     <!-- Liste rdv -->
     <div class="flex-content max-w-screen-lg bg-purple-500 shadow-2xl rounded-lg mx-auto text-center py-12 mt-4">
       <h2 class="text-3xl leading-9 font-bold tracking-tight text-white sm:text-4xl sm:leading-10">
-        Liste des rendez-vous du jour
+        List of rendez-vous of the day
       </h2>
       <div class="mt-8 flex justify-center">
         <div class="inline-flex rounded-md bg-white shadow">
-          <a class="text-gray-700 font-bold py-2 px-6" @click="getDayRendezVous">
-            Liste de rdv de la journee par ordre chrono
+          <a class="text-gray-700 font-bold py-2 px-6">
+            {{events}}
           </a>
         </div>
       </div>
@@ -52,12 +58,12 @@
     <!-- Calendar -->
     <div class="flex-content max-w-screen-lg bg-purple-500 shadow-2xl rounded-lg mx-auto text-center py-12 mt-4">
       <h2 class="text-3xl leading-9 font-bold tracking-tight text-white sm:text-4xl sm:leading-10">
-        Calendrier des rendez-vous du mois
+        Calendar of rendez-vous
       </h2>
       <div class="mt-8 flex justify-center">
         <div class="inline-flex rounded-md bg-blue-500 shadow">
           <a class="text-gray-200 font-bold py-2 px-6">
-            <router-link to="/fullcalendar">Vers le calendrier</router-link>
+            <router-link to="/fullcalendar">To the calendar</router-link>
           </a>
         </div>
       </div>
@@ -71,11 +77,13 @@ import router from "@/router";
 export default {
   name: 'DashBoard',
 
-  data: () => ({
+  data() { return {
     title: "",
     dateStart: "",
-    info:""
-  }),
+    info:"",
+    events:[]
+    }
+  },
 
   methods: {
 
@@ -100,6 +108,7 @@ export default {
         headers: {"Content-Type": "application/json"},
       }).then( res => res.json())
       .then(data => {
+        console.log(data)
         this.dateStart = data.start
         this.title = data.title
         this.info = data.info
@@ -116,6 +125,8 @@ export default {
         console.log(data)
       })
     },
+
+
 
     notRegisteredYet() {
       const username = JSON.parse(localStorage.getItem('user'));
@@ -136,7 +147,11 @@ export default {
     this.getNextRendezVous()
     this.getDayRendezVous()
   }
+
+
 }
+
+
 
 
 
