@@ -6,19 +6,17 @@
 </template>
 
 <script>
-//import { reactive } from "vue";
-//import '@fullcalendar/core/vdom' // solves problem with Vite
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import router from "@/router";
 import { formatDate } from '@fullcalendar/core'
-//import EventModal from './ModalComponent'
 
 export default {
   components: {
     FullCalendar // make the <FullCalendar> tag available
   },
+
   data: () => ({
       calendarOptions: {
         plugins: [ dayGridPlugin, interactionPlugin ],
@@ -26,6 +24,8 @@ export default {
         editable: true,
         selectable: true,
         select: (arg) => {
+          const username = JSON.parse(localStorage.getItem("user"))
+          console.log(username)
 
           console.log(formatDate(arg.start, {year: "numeric", month: "2-digit", day: "2-digit", timeZoneName:"short", hour:"2-digit", minute:"2-digit", second:"2-digit", meridiem: false}) + ' to ' +
           formatDate(arg.end, {year: "numeric", month: "2-digit", day: "2-digit", timeZoneName:"short", hour:"2-digit", minute:"2-digit", second:"2-digit", meridiem: false}))
@@ -33,14 +33,15 @@ export default {
           fetch("/event/save", {
             method: 'POST',
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({title: "default event name",
+            body: JSON.stringify({
+              user:  username,
+              title: "default event name",
               start: formatDate(arg.start, {year: "numeric", month: "2-digit", day: "2-digit", timeZoneName:"short", hour:"2-digit", minute:"2-digit", second:"2-digit", meridiem: false}),
               end: formatDate(arg.end, {year: "numeric", month: "2-digit", day: "2-digit", timeZoneName:"short", hour:"2-digit", minute:"2-digit", second:"2-digit", meridiem: false}),
-              info: "default info"})
+              info: "default info"
+            })
           }).then(res => res.json())
               .then(data => {
-                const eventIdOnSave = JSON.stringify(data.id)
-                localStorage.setItem('eventIdOnSave', eventIdOnSave)
                 const cal = arg.view.calendar
                 cal.unselect()
                 cal.addEvent({
