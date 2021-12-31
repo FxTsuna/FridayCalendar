@@ -24,7 +24,8 @@ export default {
         selectable: true,
         select: (arg) => {
 
-          console.log(formatDate(arg.start, {year: "numeric", month: "2-digit", day: "2-digit", timeZoneName:"short", hour:"2-digit", minute:"2-digit", second:"2-digit", meridiem: false}))
+          console.log(formatDate(arg.start, {year: "numeric", month: "2-digit", day: "2-digit", timeZoneName:"short", hour:"2-digit", minute:"2-digit", second:"2-digit", meridiem: false}) + ' to ' +
+          formatDate(arg.end, {year: "numeric", month: "2-digit", day: "2-digit", timeZoneName:"short", hour:"2-digit", minute:"2-digit", second:"2-digit", meridiem: false}))
 
           fetch("/event/save", {
             method: 'POST',
@@ -33,41 +34,62 @@ export default {
               start: formatDate(arg.start, {year: "numeric", month: "2-digit", day: "2-digit", timeZoneName:"short", hour:"2-digit", minute:"2-digit", second:"2-digit", meridiem: false}),
               end: formatDate(arg.end, {year: "numeric", month: "2-digit", day: "2-digit", timeZoneName:"short", hour:"2-digit", minute:"2-digit", second:"2-digit", meridiem: false}),
               info: "default info"})
-          }).then((res => {
-            if (res.status === 201) {
-              console.log(res)
-              /*
-              fetch("event/get/" + )
-
-               */
-              const cal = arg.view.calendar
-              cal.unselect()
-              cal.addEvent({
-                id: "",
-                title:"New event, click to modify",
-                start: arg.start,
-                end: arg.end,
-                allDay: true
-              })
-              //fetch("event/get l'id somehow et le mettre dans event")
-            }
-          }))
+          }).then(res => res.json())
+              .then(data => {
+                const eventIdOnSave = JSON.stringify(data.id)
+                localStorage.setItem('eventIdOnSave', eventIdOnSave)
+                const cal = arg.view.calendar
+                cal.unselect()
+                cal.addEvent({
+                  id: data.id,
+                  title:"New event, click to modify",
+                  start: arg.start,
+                  end: arg.end,
+                  allDay: true
+                })
+          })
         },
 
         eventClick: (arg) => {
-          const event = JSON.stringify(arg.event.id);
-          localStorage.setItem('event', event)
+          const eventIdOnClick = JSON.stringify(arg.event.id)
+          localStorage.setItem('eventIdOnClick', eventIdOnClick)
           router.push('EventModify')
         },
 
         events: [
-          { title: 'event 1', start: '2022-01-01', end: '2022-01-05' },
-          { title: 'event 2', start: '2022-01-02' }
+          fetch("/event/get/" + JSON.parse(localStorage.getItem('user')), {
+            method:'GET',
+            headers: {"Content-Type": "application/json"},
+          }).then(res => {
+            if (res.status === 200) {
+              console.log("test 1"+ res.json())
+              console.log("test 2"+ res)
+            }
+          })
         ]},
 
   }),
-  methods: {
+/*
+  methods:{
+    onPage() {
+      const eventId = JSON.parse(localStorage.getItem('eventIdOnSave'))
+      fetch("/event/get/" + eventId, {
+        method:'GET',
+        headers: {"Content-Type": "application/json"},
+      }).then(res => {
+        if (res.status === 200) {
+          console.log("test 1"+ res.json())
+          console.log("test 2"+ res)
+        }
+      })
+    }
+  },
+
+  beforeMount() {
+    this.onPage()
   }
+
+ */
 }
 </script>
 
