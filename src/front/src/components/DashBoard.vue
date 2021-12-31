@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="flex place-items-center">
-      <div class="text-center ml-auto mr-20 my-1">
+      <div class="text-center ml-auto mr-20">
         <button class="p-3 pl-5 pr-5 bg-indigo-500 hover:bg-blue-400 text-gray-100 text-lg rounded-lg focus:border-4 border-indigo-300" @click="logOut">
           Log out
         </button>
