@@ -1,6 +1,5 @@
 package fr.umlv.back.user;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,8 +12,11 @@ import java.util.concurrent.ExecutionException;
  */
 @RestController
 public class UserController {
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+	public UserController(UserService userService) {
+		this.userService = userService;
+	}
 
 	/**
 	 * Add a new user into the database according to the specified user info
@@ -61,6 +63,13 @@ public class UserController {
 		Objects.requireNonNull(id);
         return userService.existById(id).get();
     }
+
+	@PutMapping("/user/update")
+	public ResponseEntity<UserResponseDTO> updatePassword(@RequestBody UserSaveDTO details)
+			throws ExecutionException, InterruptedException {
+		Objects.requireNonNull(details);
+		return userService.updatePassword(details).get();
+	}
 
 	/**
 	 * Verify if a user input a correct credentials for the application login

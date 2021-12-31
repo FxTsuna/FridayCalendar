@@ -1,6 +1,5 @@
 package fr.umlv.back.event;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +19,11 @@ import java.util.concurrent.CompletableFuture;
  */
 @Service
 public class EventService {
-    @Autowired
-    private EventRepo eventRepository;
+    private final EventRepo eventRepository;
+
+	public EventService(EventRepo eventRepository) {
+		this.eventRepository = eventRepository;
+	}
 
 	/**
 	 * Verify if an event is present in the database using the specified event
@@ -34,7 +36,7 @@ public class EventService {
 	 */
     private boolean containsEvent(EventSaveDTO eventDetails) {
         var exampleMatcher = ExampleMatcher.matchingAll()
-				.withIgnorePaths("id", "title", "info", "user");
+				.withIgnorePaths("id", "title", "info");
         var example = Example.of(Event.createEvent(eventDetails), exampleMatcher);
         var event = eventRepository.findOne(example);
         return event.isPresent();
@@ -51,14 +53,16 @@ public class EventService {
 	 */
 	@Async
 	public CompletableFuture<ResponseEntity<EventResponseDTO>> addEvent(EventSaveDTO eventDetails) {
-        Objects.requireNonNull(eventDetails);
-        if(containsEvent(eventDetails)) {
-            return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.CONFLICT).build());
-        }
-        var addedEvent = eventRepository.save(Event.createEvent(eventDetails));
-        return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.CREATED)
-				.location(URI.create("/event/get/" + addedEvent.getId()))
-				.body(new EventResponseDTO(addedEvent)));
+		synchronized (eventRepository) {
+			Objects.requireNonNull(eventDetails);
+			if(containsEvent(eventDetails)) {
+				return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.CONFLICT).build());
+			}
+			var addedEvent = eventRepository.save(Event.createEvent(eventDetails));
+			return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.CREATED)
+					.location(URI.create("/event/get/" + addedEvent.getId()))
+					.body(new EventResponseDTO(addedEvent)));
+		}
     }
 
 	/**
@@ -74,11 +78,12 @@ public class EventService {
 	 */
 	@Async
     public CompletableFuture<ResponseEntity<EventResponseDTO>> updateEvent(UUID id, EventSaveDTO eventSave) {
-        var event = eventRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Event not found for this Id :: " + id));
-        event.setDateStart(eventSave.start());
-        event.setDateEnd(eventSave.start());
-        event.setInfo(eventSave.info());
+		var container = eventRepository.findById(id);
+		if(container.isEmpty()) {
+			return CompletableFuture.completedFuture(ResponseEntity.notFound().build());
+		}
+		var event = container.get();
+		event.eventUpdate(eventSave);
         final var updatedEvent = eventRepository.save(event);
         return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.ACCEPTED)
 				.location(URI.create("/event/get/" + updatedEvent.getId()))
@@ -104,6 +109,14 @@ public class EventService {
         return CompletableFuture.completedFuture(ResponseEntity.ok().build());
     }
 
+	private List<Event> getEvents(String username) {
+		var eventDetails = new EventSaveDTO("title", "", "", username, "info");
+		var exampleMatcher = ExampleMatcher.matchingAll()
+				.withIgnorePaths("id", "title", "info", "dateStart", "dateEnd");
+		var example = Example.of(Event.createEvent(eventDetails), exampleMatcher);
+		return eventRepository.findAll(example);
+	}
+
 	/**
 	 * Retrieve all the events from the DB
 	 *
@@ -111,8 +124,8 @@ public class EventService {
 	 * 		   404 (not found) http response otherwise
 	 */
 	@Async
-    public CompletableFuture<ResponseEntity<List<EventResponseDTO>>> getEvents() {
-        var events = eventRepository.findAll();
+    public CompletableFuture<ResponseEntity<List<EventResponseDTO>>> getAllEvents(String username) {
+        var events = getEvents(username);
 		if(events.isEmpty()) {
 			return CompletableFuture.completedFuture(ResponseEntity.notFound().build());
 		}

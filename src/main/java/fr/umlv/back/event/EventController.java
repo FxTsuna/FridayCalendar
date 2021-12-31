@@ -1,10 +1,8 @@
 package fr.umlv.back.event;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.ParseException;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -16,8 +14,11 @@ import java.util.concurrent.ExecutionException;
  */
 @RestController
 public class EventController {
-    @Autowired
-    private EventService eventService;
+    private final EventService eventService;
+
+	public EventController(EventService eventService) {
+		this.eventService = eventService;
+	}
 
 	/**
 	 * Add a new event into the database according to the specified event info
@@ -41,10 +42,10 @@ public class EventController {
 	 * @return 200 (ok) http response containing a list of all the events,
 	 * 		   404 (not found) http response otherwise
 	 */
-    @GetMapping("/event/all")
-    public ResponseEntity<List<EventResponseDTO>> getEvents()
+    @GetMapping("/event/all/{username}")
+    public ResponseEntity<List<EventResponseDTO>> getEvents(@PathVariable String username)
 			throws ExecutionException, InterruptedException {
-        return eventService.getEvents().get();
+        return eventService.getAllEvents(username).get();
     }
 
 	/**
